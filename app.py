@@ -3,46 +3,26 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
-@app.route("/whatsapp", methods=['POST'])
-def whatsapp_reply():
+# test route (open in browser)
+@app.route('/')
+def home():
+    return "Your WhatsApp bot is live 🚀"
+
+# Twilio webhook route
+@app.route('/whatsapp', methods=['POST'])
+def whatsapp_webhook():
     incoming_msg = request.values.get('Body', '').lower()
     resp = MessagingResponse()
     msg = resp.message()
 
-    if "exam" in incoming_msg:
-        msg.body("📅 Next exams start on 12th September.")
-    elif "result" in incoming_msg:
-        msg.body("🎓 Sample result: John Doe - Math: 85, Science: 90, English: 88")
-    elif "contact" in incoming_msg:
-        msg.body("📞 School Contact: 080-1234-5678\n📧 Email: info@myschool.com")
+    if 'hello' in incoming_msg:
+        msg.body("Hi there 👋, your bot is working!")
+    elif 'exam' in incoming_msg:
+        msg.body("Here’s your exam info 📘")
     else:
-        msg.body("Hi! Type 'exam', 'result', or 'contact' to get info.")
-    
+        msg.body("I didn’t understand that. Try saying 'hello' or 'exam'.")
+
     return str(resp)
 
 if __name__ == "__main__":
-    app.run(port=5000)
-from flask import Flask, request
-from twilio.twiml.messaging_response import MessagingResponse
-
-app = Flask(__name__)
-
-@app.route("/whatsapp", methods=['POST'])
-def whatsapp_reply():
-    incoming_msg = request.values.get('Body', '').lower()
-    resp = MessagingResponse()
-    msg = resp.message()
-
-    if "exam" in incoming_msg:
-        msg.body("📅 Next exams start on 12th September.")
-    elif "result" in incoming_msg:
-        msg.body("🎓 Sample result: John Doe - Math: 85, Science: 90, English: 88")
-    elif "contact" in incoming_msg:
-        msg.body("📞 School Contact: 080-1234-5678\n📧 Email: info@myschool.com")
-    else:
-        msg.body("Hi! Type 'exam', 'result', or 'contact' to get info.")
-    
-    return str(resp)
-
-if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)
